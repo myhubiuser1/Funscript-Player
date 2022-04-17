@@ -190,13 +190,15 @@ export class ButtplugService {
                 'Action',
                 this.debugNumber,
                 ': Sent position of',
-                set.current.pos * 0.01,
+                set.current.pos * 0.001,
                 'with duration of',
                 duration
               );
             }
             this.activeEvent.next(true);
-            await this.device.linear(set.current.pos * 0.01, duration);
+            // print(set.current.pos * 0.01)
+            await this.device.vibrate(1-set.current.pos * 0.01)
+            // await this.device.linear(set.current.pos * 0.01, duration);
             await delay(duration).then(() => {
               this.activeEvent.next(false);
               if (!this.state.isProd) {
