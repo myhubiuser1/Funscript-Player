@@ -111,7 +111,6 @@ export class ButtplugService {
       return void 0;
     }
     else if(this.device.messageAttributes(ButtplugDeviceMessageType.VibrateCmd)) {
-      console.log("Vibrating Toy");
       this.isVibrate = true; }
   }
 //Range Convert based on - https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
@@ -174,9 +173,6 @@ export class ButtplugService {
     this.isLocked = true;
 
     const command = this.configR.store.getValue().command;
-    if (this.device.messageAttributes(ButtplugDeviceMessageType.VibrateCmd)) {
-      console.log("Vibrating Toy");
-      this.isVibrate = true; }
     switch (command) {
       case 'linear':
         await this.device
