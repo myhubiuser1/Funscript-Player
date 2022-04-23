@@ -187,7 +187,6 @@ export class ButtplugService {
         await this.device
           .vibrate(1 - this.convertRange(pos))
           .catch((e) => this.sendCommandErrHandler(e));
-          console.log("Convert test", this.convertRange(pos) , pos*0.01)
         break;
       case 'linear+rotate':
         this.notifications.showToast('Not implemented yet.', 'warning');
