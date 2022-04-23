@@ -4,6 +4,7 @@ import {
   ButtplugClientDevice,
   ButtplugEmbeddedConnectorOptions,
   ButtplugWebsocketConnectorOptions,
+  ButtplugDeviceMessageType,
 } from 'buttplug';
 import { BehaviorSubject } from 'rxjs';
 import { NotificationsService } from '../../../notifications.service';
@@ -22,6 +23,13 @@ export class ButtplugService {
   isScanning = false;
   isConnecting = false;
   scanTime = 30000; // 30 second scanning limit
+  isVibrate=false;
+  minFsPos = 0;
+  maxFsPos = 100;
+  minToyPos= 0
+  maxToyPos = 1
+  FSposRange = [this.minFsPos, this.maxFsPos]
+  toyPosRange = [this.minToyPos, this.maxToyPos]
   // activeEvent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   isLocked = false;
@@ -90,12 +98,26 @@ export class ButtplugService {
       return Promise.reject(e);
     } finally {
       this.isConnecting = false;
+      this.checkVibrate()
     }
     // If we don't connect successfully, the above try statement will throw. Assume that
     // we're connected if we get this far.
     this.isConnected.next(true);
     await this.startScanning();
   }
+
+  async checkVibrate(): Promise<void> {
+    if (this.device === false) {
+      return void 0;
+    }
+    else if(this.device.messageAttributes(ButtplugDeviceMessageType.VibrateCmd)) {
+      console.log("Vibrating Toy");
+      this.isVibrate = true; }
+  }
+//Range Convert based on - https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
+  convertRange( value:number, r1: any = this.FSposRange , r2: any = this.toyPosRange ) { 
+    return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
+}
 
   async disconnect(): Promise<void> {
     await this.client.disconnect();
@@ -130,6 +152,16 @@ export class ButtplugService {
       });
     }
   }
+  async sendPauseCommand(): Promise<void> {
+    if (this.device === false) {
+      return void 0;
+    }
+    if (this.isVibrate===true) {
+      await this.device
+          .vibrate(0)
+          .catch((e) => this.sendCommandErrHandler(e));
+      }
+  }
 
   private async sendCommand(
     pos: number,
@@ -142,7 +174,9 @@ export class ButtplugService {
     this.isLocked = true;
 
     const command = this.configR.store.getValue().command;
-
+    if (this.device.messageAttributes(ButtplugDeviceMessageType.VibrateCmd)) {
+      console.log("Vibrating Toy");
+      this.isVibrate = true; }
     switch (command) {
       case 'linear':
         await this.device
@@ -151,8 +185,9 @@ export class ButtplugService {
         break;
       case 'vibrate':
         await this.device
-          .vibrate(1 - pos * 0.01)
+          .vibrate(1 - this.convertRange(pos))
           .catch((e) => this.sendCommandErrHandler(e));
+          console.log("Convert test", this.convertRange(pos) , pos*0.01)
         break;
       case 'linear+rotate':
         this.notifications.showToast('Not implemented yet.', 'warning');

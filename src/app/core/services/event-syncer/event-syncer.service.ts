@@ -66,6 +66,7 @@ export class EventSyncerService {
     switch (paused) {
       case true:
         this.stopWatch.control$.next('STOP');
+        this.buttPlugService.sendPauseCommand()
         break;
       case false:
         this.stopWatch.control$.next('START');
