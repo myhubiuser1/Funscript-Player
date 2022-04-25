@@ -11,6 +11,8 @@ export class ConfigRepository {
     const { state, config } = createState(
       withProps<ConfigState>({
         command: 'linear',
+        funscriptType: 'stroker',
+        powerLevels: [0.0,100]
       })
     );
     this.store = new Store({ name: 'config', state, config });

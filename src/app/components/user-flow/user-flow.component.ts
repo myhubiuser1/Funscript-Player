@@ -9,7 +9,7 @@ import { UserInputService } from '../load/load-video/user-input.service';
 export class UserFlowComponent {
   constructor(public userInputService: UserInputService) {}
 
-  mode: 'video' | 'script' = 'script';
+  mode: 'video' | 'script' = 'video';
 
   handleEvent(event: 'video' | 'script'): void {
     this.mode = event;

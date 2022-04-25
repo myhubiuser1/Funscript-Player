@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ConfigRepository } from '../../../../state/config/config.repository';
 import { ConfigService } from '../../../../state/config/config.service';
-import { Command } from '../../../../interface/configState';
+import { Command, FunscriptType, PowerLevels } from '../../../../interface/configState';
 import { Hotkeys } from '../../../core/services/hotkeys/hotkeys.service';
 
 @Component({
@@ -13,6 +13,8 @@ import { Hotkeys } from '../../../core/services/hotkeys/hotkeys.service';
 export class SettingsModalComponent {
   hotkeysArr = Array.from(this.hotkeys.hotkeys);
   radioValue = this.configR.store.getValue().command;
+  powerLevels = this.configR.store.getValue().powerLevels;
+  funscriptType = this.configR.store.getValue().funscriptType;
 
   constructor(
     private hotkeys: Hotkeys,
@@ -21,6 +23,29 @@ export class SettingsModalComponent {
   ) {}
 
   modelChange(event: Command): void {
-    this.configS.patchConfig({ command: event });
+    this.configS.patchConfig({
+  command: event,
+  funscriptType: this.configR.store.getValue().funscriptType,
+  powerLevels: this.configR.store.getValue().powerLevels
+});
   }
+
+  fsChange(event: FunscriptType): void {
+    this.configS.patchConfig({
+  command: this.configR.store.getValue().command,
+  funscriptType: event,
+  powerLevels: this.configR.store.getValue().powerLevels
+});
+
+  }
+
+  powerLevelChange(event: PowerLevels): void {
+    this.configS.patchConfig({
+  command: this.configR.store.getValue().command,
+  funscriptType: this.configR.store.getValue().funscriptType,
+  powerLevels: event
+  });
+  }
+
+
 }

@@ -6,6 +6,15 @@
     <label nz-radio-button nzValue="vibrate">Vibrate</label>
   </nz-radio-group>
 
+  <h4 style="margin-top: 1.5rem;">Min/Max Stroke Area/Power</h4>
+  <nz-slider nzRange [(ngModel)]="powerLevels" (ngModelChange)="powerLevelChange($event)"></nz-slider>
+  
+  <h4 style="margin-top: 1.5rem;">Funscript Type</h4>
+  <nz-radio-group [ngModel]="funscriptType" (ngModelChange)="fsChange($event)">
+    <label nz-radio-button nzValue="stroker">Stroker - Regular</label>
+    <label nz-radio-button nzValue="vibrate">Vibrate - Converted</label>
+  </nz-radio-group>
+
   <h4 style="margin-top: 1.5rem;">Hotkeys</h4>
   <div style="display: grid; grid-template-columns: 1fr auto; column-gap: 10px" *ngFor="let keys of hotkeysArr">
     <span>{{ keys[1] }}</span>
