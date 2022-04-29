@@ -26,10 +26,7 @@ export class ButtplugService {
   isVibrate=false;
   minFsPos = 0;
   maxFsPos = 100;
-  minToyPos= 0
-  maxToyPos = 1
   FSposRange = [this.minFsPos, this.maxFsPos]
-  toyPosRange = [this.minToyPos, this.maxToyPos]
   // activeEvent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   isLocked = false;
@@ -115,6 +112,8 @@ export class ButtplugService {
   }
 //Range Convert based on - https://stackoverflow.com/questions/14224535/scaling-between-two-number-ranges
   convertRange( value:number, r1: any = this.FSposRange , r2: any = this.configR.store.getValue().powerLevels ) { 
+    const isInvert = this.configR.store.getValue().invertFunscript;
+    if (isInvert) { [ r2[0], r2[1] ] = [ r2[1], r2[0] ] };
     return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
 }
 
@@ -137,12 +136,11 @@ export class ButtplugService {
         'Action',
         this.debugNumber,
         ': Sent position of',
-        set.current.pos * 0.01,
+        this.convertRange(set.current.pos)/100,
         'with duration of',
         duration
       );
 
-        console.log(this.convertRange(set.current.pos)/100)
 
     }
 
@@ -181,13 +179,13 @@ export class ButtplugService {
     switch (command) {
       case 'linear':
         await this.device
-          .linear(pos * 0.01, duration)
+          .linear(this.convertRange(pos)/100, duration)
           .catch((e) => this.sendCommandErrHandler(e));
         break;
       case 'vibrate':
         
         await this.device
-          .vibrate(1 - (this.convertRange(pos)/100))
+          .vibrate((this.convertRange(pos)/100))
           .catch((e) => this.sendCommandErrHandler(e));
         break;
       case 'linear+rotate':

@@ -43,6 +43,11 @@ export class FunscriptHeatmapComponent implements AfterViewInit {
       });
   }
 
+  async initGenerate(): Promise<void> {
+    await this.generateHeatMap(this.funscript, this.width, this.height);
+    this.cdr.markForCheck();
+  }
+
   async generateHeatMap(
     funscript: Funscript,
     width: number,

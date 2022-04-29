@@ -12,7 +12,8 @@ export class ConfigRepository {
       withProps<ConfigState>({
         command: 'linear',
         funscriptType: 'stroker',
-        powerLevels: [0.0,100]
+        powerLevels: [0.0,100],
+        invertFunscript: false
       })
     );
     this.store = new Store({ name: 'config', state, config });

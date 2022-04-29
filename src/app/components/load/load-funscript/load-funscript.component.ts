@@ -6,6 +6,7 @@ import { NotificationsService } from '../../../notifications.service';
 import { FormBuilder } from '@angular/forms';
 import { ConfigRepository } from '../../../../state/config/config.repository';
 import { LoadVideoComponent } from '../load-video/load-video.component';
+import { FunscriptHeatmapComponent } from 'src/app/components/funscript/funscript-heatmap/funscript-heatmap.component';
 
 @UntilDestroy()
 @Component({
@@ -19,7 +20,8 @@ export class LoadFunscriptComponent implements OnInit {
     private notifications: NotificationsService,
     private formBuilder: FormBuilder,
     private configR: ConfigRepository,
-    public cdr: ChangeDetectorRef
+    public cdr: ChangeDetectorRef,
+    // private heatmap: FunscriptHeatmapComponent
   ) {}
 
   @ViewChild('fsFileInput')
@@ -53,12 +55,12 @@ export class LoadFunscriptComponent implements OnInit {
           if (typeof r === 'object') {
             const funscript: Funscript = r as unknown as Funscript;
             // console.log(this.strokeToVibe(funscript.actions));
-            
+
             const fsType = this.configR.store.getValue().funscriptType;
             if (fsType==='vibrate'){
               funscript.actions = this.strokeToVibe(funscript.actions);
             }  
-            
+
             console.log("loading")
             this.userInputService.updateFunscript(funscript, files[0].name);
             

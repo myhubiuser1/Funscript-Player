@@ -14,6 +14,9 @@
     <label nz-radio-button nzValue="stroker">Stroker - Regular</label>
     <label nz-radio-button nzValue="vibrate">Vibrate - Converted</label>
   </nz-radio-group>
+  <br>
+  <h4 style="margin-top: 1.5rem;">Invert Funscript Position</h4>
+  <nz-switch [(ngModel)]="invertFunscript" (ngModelChange)="invertChange($event)"> </nz-switch>
 
   <h4 style="margin-top: 1.5rem;">Hotkeys</h4>
   <div style="display: grid; grid-template-columns: 1fr auto; column-gap: 10px" *ngFor="let keys of hotkeysArr">
